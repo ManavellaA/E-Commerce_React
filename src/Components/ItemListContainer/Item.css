@@ -1,21 +1,26 @@
-.div__buttons{
-    color: rgba(33, 33, 33, 0.748);
-    margin: 10px 10px 10px 10px;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 1em;
-    box-shadow: 3px 5px 8px black;
-    transition: all .25s;
-    width: calc(13em + 4vw);
+.div__buttons {
+  color: rgba(33, 33, 33, 0.85);
+  margin: 10px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1em;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: calc(13em + 4vw);
+  min-height: 18rem;
+  background-color: #fff;
+  padding: 1rem;
 }
 
-.cont :hover div { 
-  transform:scale(1.01);  
-} 
+.cont:hover .div__buttons {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+}
 
-h5{
-  font-size: calc(0.8em + 0.5vw)
+.div__buttons h5 {
+  font-size: calc(0.8em + 0.5vw);
+  text-align: center;
 }

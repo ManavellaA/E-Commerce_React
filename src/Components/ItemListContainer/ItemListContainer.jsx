@@ -5,38 +5,40 @@ import { getFirestore } from "../FireBase/Firebase";
 
 const ItemListContainer = () => {
   const { category } = useParams();
-  const [arrayProductos, setArrayProductos] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const dataBase = getFirestore();
+    const itemsRef = dataBase.collection("items");
+    const query = category ? itemsRef.where("categoria", "==", category) : itemsRef;
 
-    const items = dataBase.collection("items");
+    setIsLoading(true);
+    setError("");
 
-    items
+    query
       .get()
       .then((querySnapShot) => {
-        if (category) {
-          let producto = querySnapShot.docs.map((doc) => {
-            return { id: doc.id, ...doc.data() };
-          });
-          let aux = producto.filter((item) => item.categoria === category);
-          setArrayProductos(aux);
-        } else {
-          setArrayProductos(
-            querySnapShot.docs.map((doc) => {
-              return { id: doc.id, ...doc.data() };
-            })
-          );
-        }
+        const mappedProducts = querySnapShot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setProducts(mappedProducts);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        setError("No pudimos cargar los productos. Intentá nuevamente en unos segundos.");
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
-  },[category]);
+  }, [category]);
+
   return (
     <div className="ms-4 me-4 mt-5">
-      <ItemList Productos={arrayProductos} />
+      <ItemList products={products} isLoading={isLoading} error={error} />
     </div>
   );
 };
+
 export default ItemListContainer;

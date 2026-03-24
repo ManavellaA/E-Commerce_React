@@ -65,11 +65,11 @@ const Count = ({ Item, CartUse }) => {
   return (
     <div className="div_container">
       <div className="div_buttons">
-        <button onClick={clickSubtract} className={disabledButton}>
+        <button onClick={clickSubtract} className={`${disabledButton} count-button`}>
           -
         </button>
         <h2 className="text-center ms-4 me-4 mt-3 mb-3">{control}</h2>
-        <button onClick={clickAdd} className={disabledButton}>
+        <button onClick={clickAdd} className={`${disabledButton} count-button`}>
           +
         </button>
       </div>
@@ -81,11 +81,11 @@ const Count = ({ Item, CartUse }) => {
           Quitar
         </button>
       ) : view ? (
-        <button onClick={clickOnAdd} className={disabledButton}>
+        <button onClick={clickOnAdd} className={`${disabledButton} count-button`}>
           Comprar
         </button>
       ) : (
-        <button className="btn btn-success" onClick={handleShow}>
+        <button className="btn btn-success count-button" onClick={handleShow}>
           Ir al carrito
         </button>
       )}

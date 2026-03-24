@@ -1,21 +1,21 @@
-.div_container{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 20em;
+.div_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 20em;
 }
 
-.div_buttons{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    width: 40%;
+.div_buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 40%;
 }
 
-button{
-    background-color: #edac9d7b !important;
-    border: none !important;
-    color: black !important;
+.count-button {
+  background-color: #edac9d7b !important;
+  border: none !important;
+  color: black !important;
 }

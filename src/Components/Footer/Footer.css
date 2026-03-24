@@ -18,7 +18,7 @@
     color: rgba(0, 0, 0, 0.583);
     text-decoration: none;
     display:flex;
-    justify-content:end;
+    justify-content:flex-end;
     align-items:center;
 }
 .pinterest{
@@ -36,19 +36,19 @@
     font-family: 'Amiri', serif;
     font-size: 1rem;
     display:flex;
-    justify-content:end;
+    justify-content:flex-end;
     align-items:center;
     margin: 0 1em 0.1em 0 ;
     padding: 0;
 }
 
-.pinterest :hover{
+.pinterest:hover{
     color:rgba(0, 0, 0, 0.583);
     border-radius: 1em;
     animation: pulse 1s infinite;
 }
 
-.instagram :hover{
+.instagram:hover{
     color:rgba(0, 0, 0, 0.583);
     border-radius: 0.6em;
     animation: pulse 1s infinite;

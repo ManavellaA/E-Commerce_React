@@ -6,35 +6,49 @@ import { getFirestore } from "../FireBase/Firebase";
 
 const ItemDetailConteiner = () => {
   const { id } = useParams();
-  const [getItem, setGetItem] = useState([]);
+  const [item, setItem] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const dataBase = getFirestore();
+    const collection = dataBase.collection("items");
+    const itemRef = collection.doc(id);
 
-    const collecion = dataBase.collection("items");
+    setIsLoading(true);
+    setError("");
 
-    const item = collecion.doc(id);
-
-    item
+    itemRef
       .get()
       .then((doc) => {
-        setGetItem({ id: doc.id, ...doc.data() });
+        if (!doc.exists) {
+          setError("El producto no existe o fue removido.");
+          return;
+        }
+
+        setItem({ id: doc.id, ...doc.data() });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        setError("No pudimos cargar el producto. Intentá nuevamente.");
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, [id]);
 
+  if (isLoading) {
+    return <Loading msj={"....Cargando...."} />;
+  }
+
+  if (error) {
+    return <p className="text-center text-danger fw-bold mt-5">{error}</p>;
+  }
+
   return (
-    <>
-      {getItem.length === 0 ? (
-        <Loading msj={'....Cargando....'} />
-      ) : (
-        <div className="d-flex justify-content-center mt-5">
-          <ItemDetail Item={getItem} />
-        </div>
-      )}
-    </>
+    <div className="d-flex justify-content-center mt-5">
+      <ItemDetail Item={item} />
+    </div>
   );
 };
+
 export default ItemDetailConteiner;
