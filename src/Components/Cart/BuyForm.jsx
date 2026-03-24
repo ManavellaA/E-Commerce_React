@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import firebase from "firebase";
 import { getFirestore } from "../FireBase/Firebase";
@@ -6,71 +6,72 @@ import { context } from "./CartContext";
 import Alerts from "../AuxElements/Alerts";
 import Loading from "../AuxElements/Loading";
 
+const initialForm = {
+  name: "",
+  address: "",
+  city: "",
+  state: "",
+  email: "",
+  mobile: "",
+};
+
 function Form() {
   const { cart, clearCart, total, reStock } = useContext(context);
-
   const [orderId, setOrderId] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState(initialForm);
 
-  const [load, setLoad] = useState(true);
+  const isValidEmail = (value) => /\S+@\S+\.\S+/.test(value);
 
-  const nameRef = useRef();
-  const addressRef = useRef();
-  const cityRef = useRef();
-  const stateRef = useRef();
-  const emailRef = useRef();
-  const mobileRef = useRef();
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
 
-  function handleClick() {
-    if (cart.length > 0) {
-      if (
-        nameRef.current.value &&
-        addressRef.current.value &&
-        cityRef.current.value &&
-        stateRef.current.value &&
-        mobileRef.current.value
-      ) {
-        if (
-          emailRef.current.value.indexOf("@") !== -1 &&
-          emailRef.current.value.indexOf(".") !== -1
-        ) {
-          setLoad(false);
-          const dataBase = getFirestore();
-          const orders = dataBase.collection("orders");
+  const hasMissingFields = Object.values(formData).some((value) => !value.trim());
 
-          const OC = {
-            buyer: {
-              name: nameRef.current.value,
-              address: addressRef.current.value,
-              city: cityRef.current.value,
-              state: stateRef.current.value,
-              email: emailRef.current.value,
-              mobile: mobileRef.current.value,
-            },
-            date: firebase.firestore.Timestamp.fromDate(new Date()),
-            items: cart,
-            total: total,
-          };
-
-          orders
-            .add(OC)
-            .then(({ id }) => {
-              setOrderId(id);
-              reStock(dataBase);
-              clearCart();
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        } else {
-          Alerts("warning", "Upss", "El correo ingresado no es valido", 4000);
-        }
-      } else {
-        Alerts("error","Upss","Te falta completar campos del formulario",4000);
-      }
-    } else {
-      Alerts("warning","Upss","El carrito esta vacio, debes comprar algo!!",4000);
+  const handleClick = async () => {
+    if (!cart.length) {
+      Alerts("warning", "Upss", "El carrito esta vacio, debes comprar algo!!", 4000);
+      return;
     }
-  }
+
+    if (hasMissingFields) {
+      Alerts("error", "Upss", "Te falta completar campos del formulario", 4000);
+      return;
+    }
+
+    if (!isValidEmail(formData.email)) {
+      Alerts("warning", "Upss", "El correo ingresado no es valido", 4000);
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const dataBase = getFirestore();
+    const orders = dataBase.collection("orders");
+
+    const OC = {
+      buyer: {
+        ...formData,
+      },
+      date: firebase.firestore.Timestamp.fromDate(new Date()),
+      items: cart,
+      total,
+    };
+
+    try {
+      const { id } = await orders.add(OC);
+      await reStock(dataBase);
+      setOrderId(id);
+      setFormData(initialForm);
+      clearCart();
+    } catch (error) {
+      Alerts("error", "Upss", "No pudimos registrar tu compra. Probá nuevamente.", 4000);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <>
@@ -106,12 +107,14 @@ function Form() {
           </h5>
           <h5 className="text-center">Gracias!!</h5>
           <div className="text-center mt-5">
-            <Link to={"/"}>
+            <Link to="/">
               <button className="btn btn-success">Volver al inicio</button>
             </Link>
           </div>
         </div>
-      ) : load ? (
+      ) : isSubmitting ? (
+        <Loading msj={"....Enviando...."} />
+      ) : (
         <>
           <h2 className="text-center mt-5">Datos de la Compra</h2>
           <div className=" mt-5 flex-wrap container col-8 col-sm-6 col-md-5 col-lg-4 col-xl-3">
@@ -119,37 +122,49 @@ function Form() {
               placeholder="Nombre y Apellido"
               type="text"
               className="mt-3 form-control"
-              ref={nameRef}
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
             />
             <input
               placeholder="Dirección"
               type="text"
               className="mt-3 form-control"
-              ref={addressRef}
+              name="address"
+              value={formData.address}
+              onChange={handleInputChange}
             />
             <input
               placeholder="Ciudad"
               type="text"
               className="mt-3 form-control"
-              ref={cityRef}
+              name="city"
+              value={formData.city}
+              onChange={handleInputChange}
             />
             <input
               placeholder="Provincia"
               type="text"
               className="mt-3 form-control"
-              ref={stateRef}
+              name="state"
+              value={formData.state}
+              onChange={handleInputChange}
             />
             <input
               placeholder="Email"
-              type="text"
+              type="email"
               className="mt-3 form-control"
-              ref={emailRef}
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
             />
             <input
               placeholder="Celular"
-              type="number"
+              type="tel"
               className="mt-3 form-control"
-              ref={mobileRef}
+              name="mobile"
+              value={formData.mobile}
+              onChange={handleInputChange}
             />
           </div>
           <div className="text-center mt-4 mb-5">
@@ -158,10 +173,9 @@ function Form() {
             </button>
           </div>
         </>
-      ) : (
-        <Loading msj={"....Enviando...."} />
       )}
     </>
   );
 }
+
 export default Form;

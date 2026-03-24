@@ -1,26 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Monsieur+La+Doulaise&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Amiri&family=DM+Sans&family=Dancing+Script&family=Lora:ital@1&family=Nanum+Myeongjo:wght@700&display=swap');
 
-.brand{
-    font-family: 'Monsieur La Doulaise', cursive;
-    font-size: 3rem;
+.brand {
+  font-family: 'Monsieur La Doulaise', cursive;
+  font-size: 3rem;
 }
 
-.nav{
-    background-color: rgba(250, 235, 215, 0.645);
+.nav {
+  background-color: rgba(250, 235, 215, 0.645);
 }
 
-.itemNav{
-    font-family: 'Amiri', serif;
-    font-size: 1rem;
-    color: #fff;
-    margin-left: 2em;
+.itemNav {
+  font-family: 'Amiri', serif;
+  font-size: 1rem;
+  color: #303030 !important;
+  margin-left: 2em;
+  font-weight: 600;
 }
 
-@media screen and (max-width: 768px){
-    
-    .itemNav{
-        font-size: 1.1rem;
-    }
+.itemNav:hover {
+  color: #000 !important;
+  text-decoration: underline;
+}
 
+@media screen and (max-width: 768px) {
+  .itemNav {
+    font-size: 1.1rem;
+    margin-left: 0;
+  }
 }
