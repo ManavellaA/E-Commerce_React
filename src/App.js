@@ -8,6 +8,7 @@ import ItemDetailContainer from "./Components/ItemDetailContainer/ItemDetailCont
 import ItemListContainer from "./Components/ItemListContainer/ItemListContainer";
 import BuyForm from "./Components/Cart/BuyForm";
 import CartWidget from "./Components/Cart/CartWidget";
+import AdminPanel from "./Components/Admin/AdminPanel";
 import { NAV_ITEMS, BRAND_NAME } from "./constants/navigation";
 
 function App() {
@@ -30,6 +31,10 @@ function App() {
 
           <Route exact path="/Compra">
             <BuyForm />
+          </Route>
+
+          <Route exact path="/Admin">
+            <AdminPanel />
           </Route>
 
           <Route path="*">
